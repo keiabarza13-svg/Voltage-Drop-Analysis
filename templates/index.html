@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CDM | Dual Voltage Drop Analyzer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cdm-midnight: #001F3F;
+            --cdm-gold: #FFD700;
+            --cdm-blue: #004080;
+            --bg-light: #f4f7fa;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+        }
+
+        .header-banner {
+            background: linear-gradient(135deg, var(--cdm-midnight) 0%, var(--cdm-blue) 100%);
+            color: var(--cdm-gold);
+            padding: 30px 0;
+            border-bottom: 5px solid var(--cdm-gold);
+            margin-bottom: 40px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .school-logo {
+            max-width: 90px;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            background-color: var(--cdm-midnight) !important;
+            color: var(--cdm-gold) !important;
+            border-radius: 15px 15px 0 0 !important;
+            font-weight: 600;
+            padding: 15px 25px;
+        }
+
+        .section-tag {
+            background: var(--cdm-gold);
+            color: var(--cdm-midnight);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .form-label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #555;
+        }
+
+        .form-control, .form-select {
+            border-radius: 8px;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .material-icon {
+            height: 60px;       
+            width: 60px;       
+            object-fit: cover;  
+            border-radius: 6px; 
+            border: 1px solid #ddd;
+        }
+
+        .btn-calculate {
+            background: linear-gradient(to right, var(--cdm-midnight), var(--cdm-blue));
+            color: var(--cdm-gold);
+            border: none;
+            padding: 15px 40px;
+            font-weight: bold;
+            border-radius: 50px;
+            letter-spacing: 1px;
+            transition: 0.4s;
+        }
+
+        .btn-calculate:hover {
+            color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header-banner">
+        <div class="container d-flex align-items-center justify-content-between">
+          
+            <div style="width: 90px;">
+                <img src="/static/images/cdm_logo.jpg" alt="CDM Logo" class="school-logo">
+            </div>
+            
+           
+            <div class="text-center">
+                <h1 class="fw-bold mb-1">Voltage Drop Analysis</h1>
+                <p class="mb-0 opacity-75">COLEGIO DE MUNTINLUPA</p>
+            </div>
+            
+           
+            <div style="width: 90px;" class="text-end">
+                <img src="/static/images/voltage_logo.png" alt="Voltage Logo" class="school-logo">
+            </div>
+        </div>
+    </header>
+
+    <div class="container mb-5">
+        <form action="/analyze" method="POST">
+            
+            <!-- Location 1 -->
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span></span>
+                    <span class="section-tag">Location 1</span>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Location Name</label>
+                            <input type="text" name="l1_name" class="form-control" placeholder="e.g., Transformer to MDP" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">System Type</label>
+                            <select name="l1_system_type" class="form-select">
+                                <option value="Three Phase">Three Phase (3Ø)</option>
+                                <option value="Single Phase">Single Phase (1Ø)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label class="form-label">Voltage (V)</label>
+                            <input type="number" name="l1_voltage" class="form-control" step="any" required value="230">
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label">Material</label>
+                            <div class="d-flex gap-2">
+                                <select name="l1_material" class="form-select" id="l1_mat" onchange="updateIcon('l1')">
+                                    <option value="Copper">Copper</option>
+                                    <option value="Aluminum">Aluminum</option>
+                                </select>
+                                <img id="l1_img" src="/static/images/copper.jpg" class="material-icon" alt="mat">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Wire Size (mm²)</label>
+                            <select name="l1_wire_size" class="form-select">
+                                <option value="2.0">2.0 mm²</option>
+                                <option value="3.5">3.5 mm²</option>
+                                <option value="5.5">5.5 mm²</option>
+                                <option value="8.0">8.0 mm²</option>
+                                <option value="14">14 mm²</option>
+                                <option value="22">22 mm²</option>
+                                <option value="30">30 mm²</option>
+                                <option value="38">38 mm²</option>
+                                <option value="50">50 mm²</option>
+                                <option value="60">60 mm²</option>
+                                <option value="80">80 mm²</option>
+                                <option value="100">100 mm²</option>
+                                <option value="125">125 mm²</option>
+                                <option value="150">150 mm²</option>
+                                <option value="175">175 mm²</option>
+                                <option value="200">200 mm²</option>
+                                <option value="250">250 mm²</option>
+                                <option value="325">325 mm²</option>
+                                <option value="375">375 mm²</option>
+                                <option value="400">400 mm²</option>
+                                <option value="500">500 mm²</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Installation</label>
+                            <select name="l1_install" class="form-select">
+                                <option value="PVC Conduit">PVC Conduit</option>
+                                <option value="Steel Conduit">Steel Conduit</option>
+                                <option value="Open Air">Open Air</option>
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label class="form-label">Parallel Runs</label>
+                            <input type="number" name="l1_n" class="form-control" value="1" min="1">
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label">Distance (Meters)</label>
+                            <input type="number" name="l1_dist" class="form-control" step="any" required>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Load Current (Amps)</label>
+                            <input type="number" name="l1_load" class="form-control" step="any" required>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Operating Temp (°C)</label>
+                            <input type="number" name="l1_temp" class="form-control" value="75">
+                        </div>
+                        <div class="col-md-1">
+                            <label class="form-label">VD Limit (%)</label>
+                            <input type="number" name="l1_limit" class="form-control" value="3" step="0.1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Location 2 -->
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #333 !important;">
+                    <span></span>
+                    <span class="section-tag" style="background: #ccc;">Location 2</span>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Location Name</label>
+                            <input type="text" name="l2_name" class="form-control" placeholder="e.g., MDP to Panelboard" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">System Type</label>
+                            <select name="l2_system_type" class="form-select">
+                                <option value="Three Phase">Three Phase (3Ø)</option>
+                                <option value="Single Phase">Single Phase (1Ø)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label class="form-label">Voltage (V)</label>
+                            <input type="number" name="l2_voltage" class="form-control" step="any" required value="230">
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label">Material</label>
+                            <div class="d-flex gap-2">
+                                <select name="l2_material" class="form-select" id="l2_mat" onchange="updateIcon('l2')">
+                                    <option value="Copper">Copper</option>
+                                    <option value="Aluminum">Aluminum</option>
+                                </select>
+                                <img id="l2_img" src="/static/images/copper.jpg" class="material-icon" alt="mat">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Wire Size (mm²)</label>
+                            <select name="l2_wire_size" class="form-select">
+                                <option value="2.0">2.0 mm²</option>
+                                <option value="3.5">3.5 mm²</option>
+                                <option value="5.5">5.5 mm²</option>
+                                <option value="8.0">8.0 mm²</option>
+                                <option value="14">14 mm²</option>
+                                <option value="22">22 mm²</option>
+                                <option value="30">30 mm²</option>
+                                <option value="38">38 mm²</option>
+                                <option value="50">50 mm²</option>
+                                <option value="60">60 mm²</option>
+                                <option value="80">80 mm²</option>
+                                <option value="100">100 mm²</option>
+                                <option value="125">125 mm²</option>
+                                <option value="150">150 mm²</option>
+                                <option value="175">175 mm²</option>
+                                <option value="200">200 mm²</option>
+                                <option value="250">250 mm²</option>
+                                <option value="325">325 mm²</option>
+                                <option value="375">375 mm²</option>
+                                <option value="400">400 mm²</option>
+                                <option value="500">500 mm²</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Installation</label>
+                            <select name="l2_install" class="form-select">
+                                <option value="PVC Conduit">PVC Conduit</option>
+                                <option value="Steel Conduit">Steel Conduit</option>
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label class="form-label">Parallel Runs</label>
+                            <input type="number" name="l2_n" class="form-control" value="1" min="1">
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label">Distance (Meters)</label>
+                            <input type="number" name="l2_dist" class="form-control" step="any" required>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Load Current (Amps)</label>
+                            <input type="number" name="l2_load" class="form-control" step="any" required>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Operating Temp (°C)</label>
+                            <input type="number" name="l2_temp" class="form-control" value="75">
+                        </div>
+                        <div class="col-md-1">
+                            <label class="form-label">VD Limit (%)</label>
+                            <input type="number" name="l2_limit" class="form-control" value="3" step="0.1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-5">
+                <button type="submit" class="btn btn-calculate shadow-lg">
+                    GENERATE SIMULTANEOUS REPORT
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function updateIcon(loc) {
+            const mat = document.getElementById(loc + '_mat').value;
+            const img = document.getElementById(loc + '_img');
+            if(mat === "Copper") {
+                img.src = "/static/images/copper.jpg";
+            } else {
+                img.src = "/static/images/aluminum.jpg";
+            }
+        }
+    </script>
+</body>
+</html>
