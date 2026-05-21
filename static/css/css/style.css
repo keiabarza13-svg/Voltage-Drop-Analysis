@@ -1,0 +1,95 @@
+/* Custom Engineering Theme */
+:root {
+    --primary-blue: #2c3e50;
+    --accent-blue: #3498db;
+    --success-green: #27ae60;
+    --danger-red: #e74c3c;
+    --light-gray: #f4f7f6;
+}
+
+body {
+    background-color: var(--light-gray);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+}
+
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    margin-bottom: 25px;
+}
+
+.header-section {
+    background: linear-gradient(135deg, var(--primary-blue), #1a252f);
+    color: white;
+    padding: 30px;
+    border-radius: 12px 12px 0 0;
+}
+
+/* Step-by-Step Cards */
+.step-card {
+    border-left: 6px solid var(--accent-blue);
+    background: #ffffff;
+    transition: all 0.3s ease;
+    opacity: 0.95;
+}
+
+.step-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+/* Pass/Fail Badges */
+.status-badge {
+    padding: 12px 25px;
+    border-radius: 50px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.status-passed {
+    background-color: #d4edda;
+    color: var(--success-green);
+    border: 2px solid var(--success-green);
+}
+
+.status-failed {
+    background-color: #f8d7da;
+    color: var(--danger-red);
+    border: 2px solid var(--danger-red);
+}
+
+/* Mathematical Formula Styling */
+.formula-text {
+    font-family: 'Courier New', Courier, monospace;
+    background: #fdfdfd;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px dashed #ccc;
+    display: block;
+    margin-top: 10px;
+}
+
+.btn-primary {
+    background-color: var(--accent-blue);
+    border: none;
+    padding: 12px 30px;
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+}
+.derivation-container {
+    font-family: 'JetBrains Mono', monospace;
+    background-color: #1e1e1e;
+    color: #dcdcdc;
+    padding: 25px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    line-height: 1.8; /* Increases space between lines */
+    white-space: pre-line; /* This is the MAGIC part that respects new lines from Python */
+    border-left: 5px solid #FFD700;
+}
